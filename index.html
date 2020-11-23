@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .wrapper {
+        max-width: 1000px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .slider {
+        max-width: 400px;
+        min-width: 320px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 30px 50px;
+        background-color:antiquewhite;
+        position: relative;
+        overflow: hidden;
+        height: 260px;
+        box-sizing: border-box;
+    }
+
+    .slide {
+        position: absolute;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+        max-width: 300px;
+        width: 100%;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+
+    .slide img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .active {
+        opacity: 1;
+    }
+
+    .button-left,
+    .button-right {
+        position: absolute;
+    }
+
+    .button-left {
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .button-left::before {
+        content: '<';
+        font-size: 40px;
+        cursor: pointer;
+        color: #c1c1c1;
+    }
+
+    .button-right {
+        right: 20px;
+        transform: translateY(-50%);
+        top: 50%;
+    }
+    .button-right:after {
+        content: '>';
+        font-size: 40px;
+        cursor: pointer;
+        color: #c1c1c1;
+    }
+
+    .radioGroup {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 2%;
+    }
+
+    .radioButton {
+        transition: all 3s ease-in;
+    }
+
+</style>
+<body>
+    <div class="wrapper">
+        <div class="slider">
+            <div class="slide1 slide active">
+                <img src="slide1.png" alt="slide1">
+            </div>
+
+            <div class="slide2 slide">
+                <img src="slide2.png" alt="slide2">
+            </div>
+
+            <div class="slide3 slide">
+                <img src="slide3.png" alt="slide3">
+            </div>
+
+            <div class="button-left">
+                
+            </div>
+
+            <div class="button-right">
+            
+            </div>
+
+            <div class="radioGroup">
+                <input type="radio" name="radio1" class="radioButton" checked>
+                <input type="radio" name="radio1" class="radioButton">
+                <input type="radio" name="radio1" class="radioButton" id="123">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slidersBlock = document.querySelectorAll('.slide');
+        const radioButtons = document.querySelectorAll('.radioButton');
+
+        let activeSliderIndex = 0;
+
+        for (let i = 0; i < slidersBlock.length; i++) {
+            if (slidersBlock[i].classList.contains('active')) {
+                activeSliderIndex = i;
+            }
+        }
+
+        for (let i = 0; i < radioButtons.length; i++) {
+            radioButtons[i].addEventListener('click', function(event) {
+ 
+                clearInterval(timer);
+                activeSliderIndex = i;
+                for (let j = 0; j < slidersBlock.length; j++) {
+                    slidersBlock[j].classList.remove('active');
+                }
+                slidersBlock[i].classList.add('active');
+                timer = setInterval(autoPlay, 3000);
+            })
+        }
+
+        function checkActiveRadio(index) {
+           radioButtons[index].checked = true;
+        };
+
+
+
+        function autoPlay() {
+            if (activeSliderIndex === slidersBlock.length - 1) {
+                slidersBlock[activeSliderIndex].classList.remove('active');
+                slidersBlock[0].classList.add('active');
+                activeSliderIndex = 0;
+                checkActiveRadio(activeSliderIndex);
+            } else {
+                slidersBlock[activeSliderIndex].classList.remove('active');
+                slidersBlock[activeSliderIndex + 1].classList.add('active');
+                activeSliderIndex++;
+                checkActiveRadio(activeSliderIndex);
+            }
+        }
+
+        let timer = setInterval(autoPlay, 3000);
+
+        const leftButton = document.querySelector('.button-left');
+        const rightButton = document.querySelector('.button-right');
+
+        leftButton.addEventListener('click', function() {
+            if (activeSliderIndex === 0) {
+                clearInterval(timer);
+                slidersBlock[activeSliderIndex].classList.remove('active');
+                slidersBlock[slidersBlock.length - 1].classList.add('active');
+                activeSliderIndex = slidersBlock.length - 1;
+                timer = setInterval(autoPlay, 3000);
+                checkActiveRadio(activeSliderIndex);
+            } else {
+                clearInterval(timer);
+                slidersBlock[activeSliderIndex].classList.remove('active');
+                slidersBlock[activeSliderIndex - 1].classList.add('active');
+                activeSliderIndex--;
+                timer = setInterval(autoPlay, 3000);
+                checkActiveRadio(activeSliderIndex);
+            }
+        });
+
+        rightButton.addEventListener('click', function() {
+            if (activeSliderIndex === slidersBlock.length - 1) {
+                clearInterval(timer);
+                slidersBlock[activeSliderIndex].classList.remove('active');
+                slidersBlock[0].classList.add('active');
+                activeSliderIndex = 0
+                timer = setInterval(autoPlay, 3000);
+                checkActiveRadio(activeSliderIndex);
+            } else {
+                clearInterval(timer);
+                slidersBlock[activeSliderIndex].classList.remove('active');
+                slidersBlock[activeSliderIndex + 1].classList.add('active');
+                activeSliderIndex++;
+                timer = setInterval(autoPlay, 3000);
+                checkActiveRadio(activeSliderIndex);
+            }
+        });
+    </script>
+</body>
+</html>
